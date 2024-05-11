@@ -20,3 +20,4 @@ void student_print_all_detail(struct student_t *students, short size);
 void assign_student(struct student_t *student, struct dorm_t *dorm, char *student_id, char *dorm_name);
 
 #endif
+

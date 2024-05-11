@@ -122,7 +122,27 @@ int main(int _argc, char **_argv)
         if (strcmp(token, "dorm-empty") == 0)
         {
             char *dorm_name = strtok(NULL, "#");
+            int dormkosong = -1;
+            for (int i = 0; i < d; i++)
+            {
+                if (strcmp(dorm[i].name, dorm_name) == 0)
+        {
+            dormkosong = i;
+            break;
+            }
+        }
+        if (dormkosong != -1)
+        {
+            for (int i = 0; i < s; i++)
+            {
+                if (std[i].dorm != NULL && strcmp(std[i].dorm->name, dorm_name) == 0)
+                {
+                  std[i].dorm = NULL;
+                }
+            }
+
             dorm_empty(dorm, &d, dorm_name);
+        }
         }
         
         if (strcmp(token, "---") == 0)
@@ -133,4 +153,3 @@ int main(int _argc, char **_argv)
     
     return 0;
 }
-

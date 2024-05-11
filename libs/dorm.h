@@ -17,3 +17,4 @@ void dorm_print_all_detail(struct dorm_t *dorm, short d);
 void dorm_empty(struct dorm_t *dorm, short *d, char *dorm_name);
 
 #endif
+
