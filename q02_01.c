@@ -1,6 +1,3 @@
-// 12S23007 - Joy Valeda Silalahi 
-// 12S23028 - Daniel Situmorang
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,70 +6,131 @@
 
 int main(int _argc, char **_argv)
 {
-  dorm *drm = malloc(sizeof(drm));
-  student *std = malloc(sizeof(student_t));
-  short totaldrm = 0;
-  short totalstd = 0; 
- char baris[255];
-
- while(fgets(baris, 255, stdin)){
-    baris[strcspn(baris, "\r\n")] = '\0';
-
-    if ( strcmp(baris, "---") == 0 ) break;
-
-char *token = strtok(baris, "#");
-
-if ( strcmp(baris, "student-add") == 0 ) {
-    char *_id = strtok(NULL, "#");
-    char *_name = strtok(NULL, "#");
-    char *_year = strtok(NULL, "#");
-    if (strcmp(token, "male") == 0)
+    char command[100];
+    short loop = 0;
+    struct student_t *std = malloc(100 * sizeof(struct student_t));
+    struct dorm_t *dorm = malloc(100 * sizeof(struct dorm_t));
+    short s = 0; // student_size
+    short d = 0; // dorm_size
+    short idS, idD = 0;
+    while (loop != 1)
+    {
+        command[0] = '\0';
+        short k = 0;
+        while (1 == 1)
+        {
+            char i = getchar();
+            if (i == '\n')
             {
-                gender_t = GENDER_MALE;
+                break;
+            }
+            
+            if (i == '\r')
+            {
+                continue;
+            }
+            
+            command[k] = i;
+            command[++k] = '\0';
+        }
+
+        char *token = strtok(command, "#");
+
+        if (strcmp(token, "student-add") == 0)
+        {
+            short gender;
+            token = strtok(NULL, "#");
+            strcpy(std[s].id, token);
+            token = strtok(NULL, "#");
+            strcpy(std[s].name, token);
+            token = strtok(NULL, "#");
+            strcpy(std[s].year, token);
+            token = strtok(NULL, "#");
+            if (strcmp(token, "male") == 0)
+            {
+                gender = GENDER_MALE;
             } 
 
             if (strcmp(token, "female") == 0)
             {
-                gender_t = GENDER_FEMALE;
+                gender = GENDER_FEMALE;
             }
+            
+            std[s].gender = gender;
+            std[s].dorm = NULL;
+            s++;
+        }
 
-            std[totalstd].gender = gender;
-            std[totalstd].dorm = NULL;
-            totalstd++;
+        if (strcmp(token, "dorm-add") == 0)
+        {
+            short gender;
+            token = strtok(NULL, "#");
+            strcpy(dorm[d].name, token);
+            token = strtok(NULL, "#");
+            dorm[d].capacity = atoi(token);
+            token = strtok(NULL, "#");
+            if (strcmp(token, "male") == 0)
+            {
+                gender = GENDER_MALE;
+            } 
 
-}else if (strcmp(token, "dorm-add") == 0){
-    char *_name = strtok(NULL, "#");
-    unsigned short _capacity = atoi(strtok(NULL, "#"));
-    Gender _geder = (strcmp(strtok(NULL, "#"), "male") == 0 ) ? GENDER_MALE : GENDER_FEMALE;
-    drm = realloc(drm,(++totaldrm) * sizeof(dorm));
-    drm[totaldrm - 1] = create_dorm(_name, _capacity, _gender);
-
-}else if (strcmp(token, "assign-studnet") == 0){
-    char *_id = strtok(NULL, "#");
-    char *dorm_name= strtok(NULL, "#");
-    short studentIdx = findStudentIdx(_id, std, totalstd);
-    short newDormIdx = findDormIdx(dorm_name, drm, totaldrm);
-    if (studentIdx >= 0 && newDormIdx >=0) assign-student(&std[studentIdx], &drm[dormIdx]);
-
-}else if (strcmp(token, "move-student") == 0){
-    char *_id = strtok(NULL, "#");
-    char *dorm_name= strtok(NULL, "#");
-    short studentIdx = findStudentIdx(_id, std, totalstd);
-    short newDormIdx = findDormIdx(dorm_name, drm, totaldrm);
-    if (studentIdx >= 0 && newDormIdx >=0) move-student(&std[sudentIdx], &drm[dormIdx]);
-
-}else if (strcmp(token, "dorm-empty") == 0){
-    char *dorm_name= strtok(NULL, "#");
-    short x = findDormIdx(dorm_name, drm, totaldrm);
-    if ( x >= 0)
-        for (short i = 0; i < totalstd; i++){
-            if (std[i].dorm) ! NULL &&  strcmp(std[i].dorm->name, dorm_name) == 0){
-                unassign(&std[i], &drm[x]);
+            if (strcmp(token, "female") == 0)
+            {
+                gender = GENDER_FEMALE;
             }
-         }
+            
+            dorm[d].gender = gender;
+            dorm[d].residents_num = 0;
+            d++;
+        }
+
+
+        if (strcmp(token, "student-print-all-detail") == 0)
+        {
+            student_print_all_detail(std, s);
+        }
+
+        if (strcmp(token, "dorm-print-all-detail") == 0)
+        {
+            dorm_print_all_detail(dorm, d);
+        }
+        
+        if (strcmp(token, "assign-student") == 0)
+        {
+            char *id = strtok(NULL, "#");
+            char *id_dorm = strtok(NULL, "#");
+            for (short i = 0; i < s; i++)
+            {
+                if (strcmp(std[i].id, id) == 0)
+                {
+                    idS = i;
+                    break;
+                }
+            }
+            for (short i = 0; i < d; i++)
+            {
+                if (strcmp(dorm[i].name, id_dorm) == 0)
+                {
+                    idD = i;
+                    break;
+                }
+            }
+            
+            assign_student(&std[idS], &dorm[idD], id, id_dorm);
+        }
+        
+        if (strcmp(token, "dorm-empty") == 0)
+        {
+            char *dorm_name = strtok(NULL, "#");
+            dorm_empty(dorm, &d, dorm_name);
+        }
+        
+        if (strcmp(token, "---") == 0)
+        {
+            loop = 1;
+        }
     }
- }
-    free(drm);
-    free(std);
+    
     return 0;
 }
+
