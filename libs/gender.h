@@ -10,4 +10,3 @@ enum gender_t
 const char* gender_str(int gender);
 
 #endif
-

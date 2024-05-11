@@ -17,4 +17,3 @@ void dorm_empty(struct dorm_t *dorm, short *d, char *dorm_name) {
         }
     }
 }
-
